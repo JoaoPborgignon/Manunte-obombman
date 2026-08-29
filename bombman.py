@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 # coding=utf-8
 #
 # Bombman - free and open-source Bomberman clone
@@ -588,7 +588,7 @@ class Player(Positionable):
       
       if chosen_disease[0] == Player.DISEASE_SWITCH_PLAYERS:
         if game_map != None:
-          players = filter(lambda p: not p.is_dead(), game_map.get_players())
+          players = list(filter(lambda p: not p.is_dead(), game_map.get_players()))
           
           player_to_switch = self
           
@@ -1394,7 +1394,7 @@ class GameMap(object):
   
   def update_danger_map(self):
     # reset the map:
-    self.danger_map = [map(lambda tile: 0 if tile.shouldnt_walk() else GameMap.SAFE_DANGER_VALUE, tile_row) for tile_row in self.tiles]
+    self.danger_map = [list(map(lambda tile: 0 if tile.shouldnt_walk() else GameMap.SAFE_DANGER_VALUE, tile_row)) for tile_row in self.tiles]
 
     for bomb in self.bombs:
       bomb_tile = bomb.get_tile_position()
@@ -4302,7 +4302,7 @@ class Renderer(object):
       return (None, (0,0), (0,0), False, [])
         
     sprite_center = Renderer.PLAYER_SPRITE_CENTER
-    animation_frame = (player.get_state_time() / 100) % 4
+    animation_frame = (player.get_state_time() // 100) % 4
     color_index = player.get_number() if game_map.get_state() == GameMap.STATE_WAITING_TO_PLAY else player.get_team_number()
 
     if player.is_in_air():
@@ -4354,7 +4354,7 @@ class Renderer(object):
   def __get_bomb_render_info(self, bomb, game_map):
     profiler.measure_start("map rend. bomb")
     sprite_center = Renderer.BOMB_SPRITE_CENTER
-    animation_frame = (bomb.time_of_existence / 100) % 4
+    animation_frame = (bomb.time_of_existence // 100) % 4
     relative_offset = [0,0]   
     overlay_images = []      
 
@@ -4424,7 +4424,7 @@ class Renderer(object):
     line_number = 0
     object_to_render_index = 0
     
-    flame_animation_frame = (pygame.time.get_ticks() / 100) % 2
+    flame_animation_frame = (pygame.time.get_ticks() // 100) % 2
     
     for line in tiles:
       x = (GameMap.MAP_WIDTH - 1) * Renderer.MAP_TILE_WIDTH + Renderer.MAP_BORDER_WIDTH + self.map_render_location[0]
@@ -4534,9 +4534,9 @@ class Renderer(object):
     profiler.measure_stop("map rend. earthquake")
    
     if map_to_render.get_state() == GameMap.STATE_WAITING_TO_PLAY:
-      third = GameMap.START_GAME_AFTER / 3
+      third = GameMap.START_GAME_AFTER // 3
       
-      countdown_image_index = max(3 - map_to_render.get_map_time() / third,1)
+      countdown_image_index = max(3 - map_to_render.get_map_time() // third,1)
       countdown_image = self.gui_images["countdown"][countdown_image_index]
       countdown_position = (self.screen_center[0] - countdown_image.get_size()[0] / 2,self.screen_center[1] - countdown_image.get_size()[1] / 2)
       
@@ -4587,7 +4587,7 @@ class AI(object):
   def decide_general_direction(self):
     players = self.game_map.get_players()
     
-    enemy_players = filter(lambda p: p.is_enemy(self.player) and not p.is_dead(), players)
+    enemy_players = list(filter(lambda p: p.is_enemy(self.player) and not p.is_dead(), players))
     enemy_player = enemy_players[0] if len(enemy_players) > 0 else self.player
             
     my_tile_position = self.player.get_tile_position()
@@ -5473,7 +5473,7 @@ class Game(object):
 
   def filter_out_disallowed_actions(self, actions):
     player_slots = self.play_setup.get_slots()
-    result = filter(lambda a: (player_slots[a[0]] != None and player_slots[a[0]] >=0) or (a[1] == PlayerKeyMaps.ACTION_MENU), actions)    
+    result = list(filter(lambda a: (player_slots[a[0]] != None and player_slots[a[0]] >=0) or (a[1] == PlayerKeyMaps.ACTION_MENU), actions))
     return result
 
   #----------------------------------------------------------------------------
