@@ -5473,7 +5473,7 @@ class Game(object):
 
   def filter_out_disallowed_actions(self, actions):
     player_slots = self.play_setup.get_slots()
-    result = list(filter(lambda a: (player_slots[a[0]] != None and player_slots[a[0]] >=0) or (a[1] == PlayerKeyMaps.ACTION_MENU), actions))
+    result = list(filter(lambda a: (player_slots[a[0]] != None and player_slots[a[0]][0] >=0) or (a[1] == PlayerKeyMaps.ACTION_MENU), actions))
     return result
 
   #----------------------------------------------------------------------------
