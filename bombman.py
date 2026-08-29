@@ -2472,7 +2472,7 @@ class PlayerKeyMaps(StringSerializable):
     # check mouse control:
 
     if self.allow_mouse_control:
-      screen_center = (Renderer.get_screen_size()[0] / 2,Renderer.get_screen_size()[1] / 2)
+      screen_center = (Renderer.get_screen_size()[0] // 2,Renderer.get_screen_size()[1] // 2)
       mouse_position = pygame.mouse.get_pos(screen_center)
       pressed = pygame.mouse.get_pressed()
       
@@ -2739,7 +2739,7 @@ class Animation(object):
   def play(self, coordinates):
     # convert center coordinates to top left coordinates:
     
-    top_left = (coordinates[0] - self.frame_images[0].get_size()[0] / 2,coordinates[1] - self.frame_images[0].get_size()[1] / 2)
+    top_left = (coordinates[0] - self.frame_images[0].get_size()[0] // 2,coordinates[1] - self.frame_images[0].get_size()[1] // 2)
     self.playing_instances.append((top_left,pygame.time.get_ticks()))
 
   #----------------------------------------------------------------------------
@@ -3669,7 +3669,7 @@ class Renderer(object):
 
   def update_screen_info(self):
     self.screen_resolution = Renderer.get_screen_size()
-    self.screen_center = (self.screen_resolution[0] / 2,self.screen_resolution[1] / 2)
+    self.screen_center = (self.screen_resolution[0] // 2,self.screen_resolution[1] // 2)
     self.map_render_location = Renderer.get_map_render_position()
 
   #----------------------------------------------------------------------------
@@ -3973,7 +3973,7 @@ class Renderer(object):
     if self.menu_background_image == None:
       self.menu_background_image = pygame.image.load(os.path.join(Game.RESOURCE_PATH,"gui_menu_background.png"))
 
-    background_position = (self.screen_center[0] - self.menu_background_image.get_size()[0] / 2,self.screen_center[1] - self.menu_background_image.get_size()[1] / 2)
+    background_position = (self.screen_center[0] - self.menu_background_image.get_size()[0] // 2,self.screen_center[1] - self.menu_background_image.get_size()[1] // 2)
       
     profiler.measure_start("menu rend. backg.")
     result.blit(self.menu_background_image,background_position)
@@ -4031,7 +4031,7 @@ class Renderer(object):
     y = self.screen_center[1] + Renderer.MENU_DESCRIPTION_Y_OFFSET
     
     if len(menu_to_render.get_text()) != 0:
-      result.blit(self.menu_item_images[0][1],(self.screen_center[0] - self.menu_item_images[0][1].get_size()[0] / 2,y))    # menu description text image is at index 0      
+      result.blit(self.menu_item_images[0][1],(self.screen_center[0] - self.menu_item_images[0][1].get_size()[0] // 2,y))    # menu description text image is at index 0      
       y += self.menu_item_images[0][1].get_size()[1] + Renderer.MENU_LINE_SPACING * 2
     
     menu_items = menu_to_render.get_items()
@@ -4079,13 +4079,13 @@ class Renderer(object):
       for i in range(min(Menu.MENU_MAX_ITEMS_VISIBLE,len(menu_items[j]) - menu_to_render.get_scroll_position())):
         item_image = self.menu_item_images[(j,i + menu_to_render.get_scroll_position())][1]
 
-        x = xs[j] - item_image.get_size()[0] / 2
+        x = xs[j] - item_image.get_size()[0] // 2
                 
         if (i + menu_to_render.get_scroll_position(),j) == selected_coordinates:
           # item is selected
           scale = (8 + math.sin(pygame.time.get_ticks() / 40.0)) / 7.0    # make the pulsating effect
           item_image = pygame.transform.scale(item_image,(int(scale * item_image.get_size()[0]),int(scale * item_image.get_size()[1])))
-          x = xs[j] - item_image.get_size()[0] / 2
+          x = xs[j] - item_image.get_size()[0] // 2
           pygame.draw.rect(result,(255,0,0),pygame.Rect(x - 4,y - 2,item_image.get_size()[0] + 8,item_image.get_size()[1] + 4))
         
         result.blit(item_image,(x,y))
@@ -4121,8 +4121,8 @@ class Renderer(object):
       
       text_image = pygame.transform.rotate(self.gui_images["prompt"],math.sin(pygame.time.get_ticks() / 100) * 5)
       
-      x = self.screen_center[0] - text_image.get_size()[0] / 2
-      y = self.screen_center[1] - text_image.get_size()[1] / 2
+      x = self.screen_center[0] - text_image.get_size()[0] // 2
+      y = self.screen_center[1] - text_image.get_size()[1] // 2
       
       result.blit(text_image,(x,y))
     
@@ -4317,7 +4317,7 @@ class Renderer(object):
       image_to_render = pygame.transform.scale(player_image,(int(scale * player_image.get_size()[0]),int(scale * player_image.get_size()[1])))
       draw_shadow = False
               
-      relative_offset[0] = -1 * (image_to_render.get_size()[0] / 2 - Renderer.PLAYER_SPRITE_CENTER[0])                   # offset caused by scale  
+      relative_offset[0] = -1 * (image_to_render.get_size()[0] // 2 - Renderer.PLAYER_SPRITE_CENTER[0])                   # offset caused by scale  
       relative_offset[1] = -1 * int(math.sin(quotient * math.pi / 2.0) * Renderer.MAP_TILE_HEIGHT * GameMap.MAP_HEIGHT)  # height offset
 
     elif player.is_teleporting():
@@ -4538,7 +4538,7 @@ class Renderer(object):
       
       countdown_image_index = max(3 - map_to_render.get_map_time() // third,1)
       countdown_image = self.gui_images["countdown"][countdown_image_index]
-      countdown_position = (self.screen_center[0] - countdown_image.get_size()[0] / 2,self.screen_center[1] - countdown_image.get_size()[1] / 2)
+      countdown_position = (self.screen_center[0] - countdown_image.get_size()[0] // 2,self.screen_center[1] - countdown_image.get_size()[1] // 2)
       
       result.blit(countdown_image,countdown_position)
    
@@ -5190,7 +5190,7 @@ class Game(object):
  
     self.screen = pygame.display.set_mode(self.settings.screen_resolution,display_flags)
     
-    screen_center = (Renderer.get_screen_size()[0] / 2,Renderer.get_screen_size()[1] / 2)
+    screen_center = (Renderer.get_screen_size()[0] // 2,Renderer.get_screen_size()[1] // 2)
     pygame.mouse.set_pos(screen_center)
     
     self.renderer.update_screen_info()
@@ -5231,9 +5231,9 @@ class Game(object):
     prevent_input_processing = False
     
     # cheack if any cheat was typed:
-    self.__check_cheat("party",game.CHEAT_PARTY)
-    self.__check_cheat("herecomedatboi",game.CHEAT_ALL_ITEMS)
-    self.__check_cheat("leeeroy",game.CHEAT_PLAYER_IMMORTAL)
+    self.__check_cheat("party",Game.CHEAT_PARTY)
+    self.__check_cheat("herecomedatboi",Game.CHEAT_ALL_ITEMS)
+    self.__check_cheat("leeeroy",Game.CHEAT_PLAYER_IMMORTAL)
     self.__check_cheat("revert")
 
     self.player_key_maps.get_current_actions()       # this has to be called in order for player_key_maps to update mouse controls properly
